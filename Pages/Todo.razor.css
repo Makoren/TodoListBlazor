@@ -1,0 +1,14 @@
+#todolist {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+#customform {
+    display: flex;
+    flex-direction: row;
+}
+
+.todoitem {
+    min-width: 10rem;
+}

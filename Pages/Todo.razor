@@ -1,0 +1,61 @@
+﻿@page "/todo"
+
+<PageTitle>Todo</PageTitle>
+
+<h1 style="color: @HeadingStyle">
+    Todo (@todos.Count(todo => !todo.IsDone))
+</h1>
+
+<ul id="todolist">
+    @foreach (var todo in todos)
+    {
+        <li>
+            <button class="btn btn-default todoitem" @onclick="() => ToggleItem(todo)">
+                <span>@todo.Title @(todo.IsDone ? "✅" : "❌")</span>
+            </button>
+        </li>
+    }
+</ul>
+
+<div id="customform">
+    <input class="form-control" placeholder="Something to do..." @bind="newItem" @bind:event="oninput" @onkeypress="OnKeyPress" />
+    <button class="btn btn-primary" @onclick="AddItem">Add Item</button>
+</div>
+
+@code {
+    private string HeadingStyle { get; set; } = "black";
+    private string? newItem;
+    private List<TodoItem> todos = new();
+
+    private void AddItem()
+    {
+        if (!string.IsNullOrWhiteSpace(newItem))
+        {
+            todos.Add(new TodoItem { Title = newItem });
+            newItem = string.Empty;
+        }
+    }
+
+    private void OnKeyPress(KeyboardEventArgs args)
+    {
+        if (args.Key == "Enter")
+        {
+            AddItem();
+            UpdateHeadingStyle();
+        }
+    }
+
+    private void ToggleItem(TodoItem item)
+    {
+        item.IsDone = !item.IsDone;
+        UpdateHeadingStyle();
+    }
+
+    private void UpdateHeadingStyle()
+    {
+        if (todos.Count(todo => !todo.IsDone) <= 0)
+            HeadingStyle = "black";
+        else
+            HeadingStyle = "red";
+    }
+}
